@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<!-- ================================================== -->
+		<meta charset="UTF-8">
+		<!-- ================================================== -->
+		<!-- Optional support for older (IE9 or older) Microsoft browsers: -->
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<!-- ================================================== -->
+		<title>Aqua noticias</title>
+		<!-- ================================================== -->
+		<!-- Bootstrap CSS: -->
+		<link rel="stylesheet" href="css/bootstrap.min.css"/>
+		<!-- ================================================== -->
+		<!-- Font Awesome library: -->
+		<link rel="stylesheet" href="css/fontawesome/css/all.css"/>
+        <script src="js/jquery.js"></script>
+        <style>
+            html,body {
+                height: 100%;
+                font-size: 22px;
+            }
+            #notice-title{font-size: 22px;}
+            body {
+                padding-top: 50px; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+            }
+            .d-none{display:none !important;height:0px !important;width:0px !important;}
+            .img-portfolio {
+                margin-bottom: 30px;
+            }
+
+            .img-hover:hover {
+                opacity: 0.8;
+            }
+
+            /* Home Page Carousel */
+
+            header.carousel {
+                height: 33%;
+            }
+
+            header.carousel .item,
+            header.carousel .item.active,
+            header.carousel .carousel-inner {
+                height: 100%;
+            }
+
+            header.carousel .fill {
+                width: 100%;
+                height: 100%;
+                background-position: center;
+                background-size: cover;
+            }
+
+            /* Footer Styles */
+
+            footer {
+                margin: 50px 0;
+            }
+            h4{color:#fff;}
+
+        </style>
+	</head>
+	<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <h4 id="notice-title"></h4>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+    <!-- Header Carousel -->
+        <header id="myCarousel" class="carousel slide">
+
+        </header>
+
+    <!-- Page Content -->
+    <div class="container">
+
+        <!-- Marketing Icons Section -->
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">
+                    Tenemos para contarte que:
+                </h1>
+                <p id="notice-content">
+                    
+                </p>
+                <!-- 
+                <div id="notice-extra" class="alert alert-info" role="alert">
+                    Esta noticia contiene material extra via: 
+                </div> -->
+            </div>
+        </div>
+        <!-- /.row -->
+
+    </div>
+
+	<script>
+		
+	</script>
+	<!-- ================================================== -->
+	<!-- Bootstrap JavaScript library: -->
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/main.min.js"></script>
+</body>
+</html>
