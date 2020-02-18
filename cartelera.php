@@ -53,7 +53,8 @@
                     <p id="article-content">
 
                     </p>
-                    <!--<div id="article-extra" class="alert alert-info" role="alert">
+                    <!-- 
+                    <div id="article-extra" class="alert alert-info" role="alert">
                         Esta noticia contiene material extra via: 
                     </div> -->
                 </div>
@@ -72,15 +73,13 @@
     <!-- Bootstrap JavaScript library: -->
     <script src="js/bootstrap.min.js"></script>
     <script>
-        var interval = 20000;
-
         $(document).ready(function() {
             getArticles();
             picoyplaca();
         });
 
         function picoyplaca() {
-            $.get("https://admon.bionix.com.co/index.php/apis/api_controller/getPicoPlaca?idResidencia=36", function(data) {
+            $.get(<?php echo '"https://admon.bionix.com.co/index.php/apis/api_controller/getPicoPlaca?idResidencia='.htmlspecialchars($_GET["res"]).'"'; ?>, function(data) {
                 if (!data['display']) {
                     $(".noSundays").addClass("d-none");
                 } else {
@@ -102,8 +101,11 @@
                     let horas = "De " + timeString12hrStart + " a " + timeString12hrEnd;
 
                     fecha = new Date();
+                    var meses = new Array("enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre");
+                    var dias = new Array('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday');
+                    var dia = dias[fecha.getDay()];
 
-                    $("#fechaSpan").text(String(fecha.getDate()) + " / " + String(fecha.getMonth() + 1) + " / " + String(fecha.getFullYear()));
+                    $("#fechaSpan").text(meses[fecha.getMonth()] + " " + String(fecha.getDate()) + " de " + String(fecha.getFullYear()));
                     $(".first").text(nums[0]);
                     $(".second").text(nums[1]);
                     $("#horas").text(horas);
@@ -112,6 +114,7 @@
         }
 
         function regularArticle(article) {
+
             titleContent.innerHTML = article.titulo;
             textContent.innerHTML = article.texto;
             imagenes = article.multimedia.filter(multimedia => multimedia.tipoMultimedia_idtipoMultimedia == "1");
@@ -120,7 +123,7 @@
                 let indicadores = "";
                 let slides = "";
                 for (let multimediaIter = 0; multimediaIter < imagenes.length; multimediaIter++) {
-                    let imageUrl = 'http:////admon.bionix.com.co//recursos//uresidencial69//anuncios//anuncio' + article.idanuncio + '//images//' + imagenes[multimediaIter].url;
+                    let imageUrl = <?php echo '"https:////admon.bionix.com.co//recursos//uresidencial'.htmlspecialchars($_GET["res"]).'//anuncios//anuncio"'; ?> + article.idanuncio + '//images//' + imagenes[multimediaIter].url;
                     if (multimediaIter != 0) {
                         indicadores += '<li data-target="#myCarousel" data-slide-to="' + multimediaIter + '"></li>';
                         slides += '<div class="item"><div id="slide' + multimediaIter + '" class="fill" style="background-image: url(' + imageUrl + ')"></div></div>';
@@ -129,10 +132,10 @@
                         slides += '<div class="item active"><div id="slide' + multimediaIter + '" class="fill" style="background-image: url(' + imageUrl + ')"></div></div>';
                     }
                     carouselMultimedia.innerHTML = '<ol class="carousel-indicators">' + indicadores + '</ol><div class="carousel-inner">' + slides + '</div><a class="left carousel-control" href="#myCarousel" data-slide="prev"><span class="icon-prev"></span></a><a class="right carousel-control" href="#myCarousel" data-slide="next"><span class="icon-next"></span></a>';
+
                 }
-                let intervalSlide = interval / imagenes.length;
                 $('.carousel').carousel({
-                    interval: intervalSlide,
+                    interval: 2000, //changes the speed,
                     cycle: true
                 })
 
@@ -144,8 +147,9 @@
         }
 
         function fullScreenArticle(article) {
+            console.log(article);
             imagenes = article.multimedia.filter(multimedia => multimedia.tipoMultimedia_idtipoMultimedia == "1");
-            let imageUrl = 'http:////admon.bionix.com.co//recursos//uresidencial69//anuncios//anuncio' + article.idanuncio + '//images//' + imagenes[0].url;
+            let imageUrl = <?php echo '"https:////admon.bionix.com.co//recursos//uresidencial'.htmlspecialchars($_GET["res"]).'//anuncios//anuncio"'; ?> + article.idanuncio + '//images//' + imagenes[0].url;
             fullScreenContent.innerHTML = '<img src="' + imageUrl + '">';
         }
 
@@ -155,9 +159,11 @@
         const fullScreenContent = document.getElementById("fullScreenArticle");
 
         function getArticles() {
-            $.get("https://aquatower.bionix.com.co/index.php/apis/api_controller/getNoticiaTv/69", function(data) {
+            $.get(<?php echo '"https://admon.bionix.com.co/index.php/apis/api_controller/getNoticiaTv/'.htmlspecialchars($_GET["res"]).'"'; ?>, function(data) {
+                //var noticiaInicio = data.data.pop();
                 var data = data.data;
                 data.push("The end")
+                var interval = 20000;
                 var itemsProcessed = 0;
 
                 data.forEach(function(article, index) {
@@ -165,7 +171,6 @@
                         itemsProcessed++;
                         if (itemsProcessed === data.length) {
                             getArticles();
-                            picoyplaca();
                         } else {
                             if (article.fullscreen == '1') {
                                 //console.log("tiene fullscreen");
