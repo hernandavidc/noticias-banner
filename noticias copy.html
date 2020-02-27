@@ -96,7 +96,7 @@
 
                     fecha = new Date();
                     var meses = new Array("enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre");
-                    var dias = new Array('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday');
+                    var dias = new Array('Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado');
                     var dia = dias[fecha.getDay()];
 
                     $("#fechaSpan").text(meses[fecha.getMonth()] + " " + String(fecha.getDate()) + " de " + String(fecha.getFullYear()));

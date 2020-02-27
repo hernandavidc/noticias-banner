@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Aqua noticias</title>
+    <title>Admon noticias</title>
     <link rel="stylesheet" href="css/bootstrap.min.css" />
     <link rel="stylesheet" href="css/fontawesome/css/all.css" />
     <link rel="stylesheet" href="css/style.css" />
@@ -29,7 +29,7 @@
                         <div id="number">
                             <span class="first"></span> y <span class="second"></span>
                         </div>
-                        <p id="picoyplaca-city">- Bucaramanga -</p>
+                        <p id="picoyplaca-city">- <span id="day"></span> -</p>
                     </div>
                 </div>
             </div>
@@ -80,7 +80,7 @@
         });
 
         function picoyplaca() {
-            $.get("https://admon.bionix.com.co/index.php/apis/api_controller/getPicoPlaca?idResidencia=36", function(data) {
+            $.get("https://admon.bionix.com.co/index.php/apis/api_controller/getPicoPlaca?idResidencia=41", function(data) {
                 if (!data['display']) {
                     $(".noSundays").addClass("d-none");
                 } else {
@@ -102,11 +102,14 @@
                     let horas = "De " + timeString12hrStart + " a " + timeString12hrEnd;
 
                     fecha = new Date();
+                    var dias = new Array('Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado');
+                    var dia = dias[fecha.getDay()];
 
                     $("#fechaSpan").text(String(fecha.getDate()) + " / " + String(fecha.getMonth() + 1) + " / " + String(fecha.getFullYear()));
                     $(".first").text(nums[0]);
                     $(".second").text(nums[1]);
                     $("#horas").text(horas);
+                    $("#day").text(dia);
                 }
             });
         }
@@ -120,7 +123,7 @@
                 let indicadores = "";
                 let slides = "";
                 for (let multimediaIter = 0; multimediaIter < imagenes.length; multimediaIter++) {
-                    let imageUrl = 'http:////admon.bionix.com.co//recursos//uresidencial69//anuncios//anuncio' + article.idanuncio + '//images//' + imagenes[multimediaIter].url;
+                    let imageUrl = 'http:////admon.bionix.com.co//recursos//uresidencial41//anuncios//anuncio' + article.idanuncio + '//images//' + imagenes[multimediaIter].url;
                     if (multimediaIter != 0) {
                         indicadores += '<li data-target="#myCarousel" data-slide-to="' + multimediaIter + '"></li>';
                         slides += '<div class="item"><div id="slide' + multimediaIter + '" class="fill" style="background-image: url(' + imageUrl + ')"></div></div>';
@@ -145,42 +148,49 @@
 
         function fullScreenArticle(article) {
             imagenes = article.multimedia.filter(multimedia => multimedia.tipoMultimedia_idtipoMultimedia == "1");
-            let imageUrl = 'http:////admon.bionix.com.co//recursos//uresidencial69//anuncios//anuncio' + article.idanuncio + '//images//' + imagenes[0].url;
+            let imageUrl = 'http:////admon.bionix.com.co//recursos//uresidencial41//anuncios//anuncio' + article.idanuncio + '//images//' + imagenes[0].url;
             fullScreenContent.innerHTML = '<img src="' + imageUrl + '">';
+        }
+
+        function processData(data) {
+            var itemsProcessed = 0;
+            data.forEach(function(article, index) {
+                setTimeout(function() {
+                    itemsProcessed++;
+                    if (itemsProcessed === data.length) {
+                        getArticles();
+                        picoyplaca();
+                    } else {
+                        if (article.fullscreen == '1') {
+                            //console.log("tiene fullscreen");
+                            $("#fullScreenArticle").removeClass("d-none");
+                            $("#regularArticle").addClass("d-none");
+                            fullScreenArticle(article);
+                        } else {
+                            //console.log("no tiene fullscreen");
+                            $("#regularArticle").removeClass("d-none");
+                            $("#fullScreenArticle").addClass("d-none");
+                            regularArticle(article);
+                        }
+                    }
+                }, index * interval);
+            });
         }
 
         const titleContent = document.getElementById("article-title");
         const textContent = document.getElementById("article-content");
         const carouselMultimedia = document.getElementById("myCarousel");
         const fullScreenContent = document.getElementById("fullScreenArticle");
+        var oldData;
 
         function getArticles() {
-            $.get("https://aquatower.bionix.com.co/index.php/apis/api_controller/getNoticiaTv/69", function(data) {
-                var data = data.data;
-                data.push("The end")
-                var itemsProcessed = 0;
-
-                data.forEach(function(article, index) {
-                    setTimeout(function() {
-                        itemsProcessed++;
-                        if (itemsProcessed === data.length) {
-                            getArticles();
-                            picoyplaca();
-                        } else {
-                            if (article.fullscreen == '1') {
-                                //console.log("tiene fullscreen");
-                                $("#fullScreenArticle").removeClass("d-none");
-                                $("#regularArticle").addClass("d-none");
-                                fullScreenArticle(article);
-                            } else {
-                                //console.log("no tiene fullscreen");
-                                $("#regularArticle").removeClass("d-none");
-                                $("#fullScreenArticle").addClass("d-none");
-                                regularArticle(article);
-                            }
-                        }
-                    }, index * interval);
-                });
+            $.get("https://aquatower.bionix.com.co/index.php/apis/api_controller/getNoticiaTv/41", function(data) {
+                oldData = data.data;
+                oldData.push("The end")
+                var data = oldData;
+                processData(data);
+            }).fail(function() {
+                processData(oldData);
             });
         }
     </script>
